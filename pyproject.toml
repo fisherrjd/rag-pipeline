@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "RAG pipeline"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "beautifulsoup4>=4.12",
+    "markdownify>=1.2.2",
+    "requests>=2.32.5",
+]
 
 [dependency-groups]
 dev = ["ruff>=0.12.10", "ty>=0.0.1a19", "pytest>=8.3.4", "pytest-cov>=6.0.0"]

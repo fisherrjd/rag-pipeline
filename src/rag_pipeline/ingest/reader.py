@@ -1,0 +1,41 @@
+import json
+import logging
+from pathlib import Path
+from typing import Iterator
+
+from src.rag_pipeline.ingest.cleaner import clean
+
+log = logging.getLogger(__name__)
+
+PAGES_DIR = Path(__file__).resolve().parents[3] / "data" / "pages"
+MANIFEST_PATH = Path(__file__).resolve().parents[3] / "data" / "manifest.json"
+
+
+def iter_pages(pages_dir: Path = PAGES_DIR) -> Iterator[dict]:
+    """Yield cleaned page dicts with keys: pageid, title, text.
+
+    For each page, uses a cached .md if present. Otherwise converts the .html
+    via cleaner and saves the result as .md alongside the source file.
+    """
+    manifest = _load_manifest()
+
+    for html_path in sorted(pages_dir.glob("*.html")):
+        pageid = html_path.stem
+        md_path = html_path.with_suffix(".md")
+
+        if md_path.exists() and md_path.stat().st_mtime >= html_path.stat().st_mtime:
+            text = md_path.read_text(encoding="utf-8")
+        else:
+            log.info(f"Converting {pageid} to markdown...")
+            html = html_path.read_text(encoding="utf-8")
+            text = clean(html)
+            md_path.write_text(text, encoding="utf-8")
+
+        title = manifest.get(pageid, {}).get("title", pageid)
+        yield {"pageid": pageid, "title": title, "text": text}
+
+
+def _load_manifest() -> dict:
+    if MANIFEST_PATH.exists():
+        return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    return {}
