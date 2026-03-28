@@ -32,4 +32,5 @@ in
 (env.overrideAttrs (_: {
   inherit name;
   NIXUP = "0.0.10";
+  PYTHONPATH = "${toString ./.}/src";
 } // uvEnv.uvEnvVars)) // { inherit scripts; }

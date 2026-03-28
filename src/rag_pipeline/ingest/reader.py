@@ -3,12 +3,12 @@ import logging
 from pathlib import Path
 from typing import Iterator
 
-from src.rag_pipeline.ingest.cleaner import clean
+from rag_pipeline.ingest.cleaner import clean
 
 log = logging.getLogger(__name__)
 
-PAGES_DIR = Path(__file__).resolve().parents[3] / "data" / "pages"
-MANIFEST_PATH = Path(__file__).resolve().parents[3] / "data" / "manifest.json"
+PAGES_DIR = Path.cwd() / "data" / "pages"
+MANIFEST_PATH = Path.cwd() / "data" / "manifest.json"
 
 
 def iter_pages(pages_dir: Path = PAGES_DIR) -> Iterator[dict]:
@@ -18,18 +18,21 @@ def iter_pages(pages_dir: Path = PAGES_DIR) -> Iterator[dict]:
     via cleaner and saves the result as .md alongside the source file.
     """
     manifest = _load_manifest()
+    log.info(f"Reading pages from {pages_dir}")
 
     for html_path in sorted(pages_dir.glob("*.html")):
         pageid = html_path.stem
         md_path = html_path.with_suffix(".md")
 
         if md_path.exists() and md_path.stat().st_mtime >= html_path.stat().st_mtime:
+            log.debug(f"Cache hit {pageid}")
             text = md_path.read_text(encoding="utf-8")
         else:
             log.info(f"Converting {pageid} to markdown...")
             html = html_path.read_text(encoding="utf-8")
             text = clean(html)
             md_path.write_text(text, encoding="utf-8")
+            log.info(f"Wrote {md_path}")
 
         title = manifest.get(pageid, {}).get("title", pageid)
         yield {"pageid": pageid, "title": title, "text": text}

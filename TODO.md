@@ -4,7 +4,7 @@
 > Confluence fetch + HTML-to-markdown conversion is already handled by an
 > external script. The output is a directory of markdown files sorted by
 > page index (`pages/version/`). This phase just loads those files.
-- [ ] Implement `cleaner.py` - light normalization pass (strip leftover HTML artifacts, normalize whitespace, remove Confluence boilerplate if any)
+- [ ] Implement `cleaner.py` - light normalization pass (strip leftover HTML artifacts, normalize whitespace, remove WIKI boilerplate if any)
 - [ ] Implement `reader.py` - walk the pages directory, load `.md` files into a document structure (text + metadata: page ID, file path, etc.)
 - [ ] Write tests for ingestion (load sample `.md` files, verify document structure and clean output)
 

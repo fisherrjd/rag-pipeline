@@ -36,6 +36,13 @@ def clean_html(html: str) -> str:
     for tag in soup.find_all("a"):
         tag.replace_with(tag.get_text())
 
+    # Flatten any table with colspan/rowspan to plain text — covers all complex
+    # wiki tables (money making, crafting, questdetails, etc.) without needing
+    # to enumerate every class
+    for tag in soup.find_all("table"):
+        if tag.find(attrs={"colspan": True}) or tag.find(attrs={"rowspan": True}):
+            tag.replace_with(tag.get_text(separator="\n", strip=True))
+
     return str(soup)
 
 

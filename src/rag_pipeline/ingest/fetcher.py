@@ -112,7 +112,7 @@ if __name__ == "__main__":
         manifest_path=project_root / "data" / "manifest.json",
     )
 
-    from src.rag_pipeline.ingest.reader import iter_pages
+    from rag_pipeline.ingest.reader import iter_pages
 
     for page in iter_pages():
         print(f"{page['pageid']}: {page['title']} ({len(page['text'])} chars)")
