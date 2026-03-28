@@ -1,6 +1,33 @@
+import re
 from collections.abc import Callable
 
 SEPARATORS = ["\n\n", "\n", ". ", " ", ""]
+HEADER_RE = re.compile(r'^(#{2,3})\s+(.+)$', re.MULTILINE)
+
+
+def _parse_sections(text: str) -> list[tuple[str, str]]:
+    """Split markdown text into (section_title, content) pairs.
+
+    Intro text before the first header gets the title "".
+    Each ## or ### header starts a new section; content runs until the next header.
+    """
+    sections = []
+    matches = list(HEADER_RE.finditer(text))
+
+    # Capture any intro text that appears before the first header
+    intro_end = matches[0].start() if matches else len(text)
+    intro = text[:intro_end].strip()
+    if intro:
+        sections.append(("", intro))
+
+    for i, match in enumerate(matches):
+        title = match.group(2).strip()
+        content_start = match.end()
+        content_end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        content = text[content_start:content_end].strip()
+        sections.append((title, content))
+
+    return sections
 
 
 def _count_words(text: str) -> int:

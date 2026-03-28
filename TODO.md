@@ -60,3 +60,4 @@
 - [ ] Try a different vector store (pgvector, FAISS) and compare
 - [ ] Add metadata filtering (filter by Confluence space, page date, etc.)
 - [ ] Explore re-ranking retrieved results before generation
+- [ ] Revisit cleaner.py colspan/rowspan table flattening — currently flattens to unlabeled plain text, losing column/row associations (e.g. combat stats tables). Consider reconstructing as labeled key-value pairs to improve retrieval quality on structured stat data
