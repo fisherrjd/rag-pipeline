@@ -9,7 +9,7 @@
 let
   name = "rag-pipeline";
   uvEnv = pkgs.uv-nix.mkEnv {
-    inherit name; python = pkgs.python314;
+    inherit name; python = pkgs.python313;
     workspaceRoot = pkgs.hax.filterSrc { path = ./.; };
     pyprojectOverrides = final: prev: { };
   };

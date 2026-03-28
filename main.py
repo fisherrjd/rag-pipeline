@@ -1,13 +1,21 @@
-from rag_pipeline.chunking.splitter import _parse_sections
+from rag_pipeline.chunking.splitter import chunk_page
 from rag_pipeline.ingest.reader import iter_pages
+
+PAGES = {"Minigames"}
 
 
 def main():
-    page = next(iter_pages())
-    print(f"Page: {page['title']}\n")
-    for title, content in _parse_sections(page["text"]):
-        print(f"  [{title!r}] {len(content.split())} words")
-        print(f"    {content[:80].replace(chr(10), ' ')!r}")
+    for page in iter_pages():
+        if page["title"] not in PAGES:
+            continue
+        chunks = chunk_page(page)
+        print(f"\n=== {page['title']} — {len(chunks)} chunks ===")
+        for chunk in chunks:
+            section = chunk["section"] or "intro"
+            part = f" part={chunk['part']}" if chunk["part"] > 0 else ""
+            words = len(chunk["text"].split())
+            print(f"  [{section}{part}] {words} words")
+            print(f"    {chunk['text'][:80].replace(chr(10), ' ')!r}")
 
 
 if __name__ == "__main__":

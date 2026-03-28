@@ -110,3 +110,38 @@ def split(
 ) -> list[str]:
     chunks = _recursive_split(text, SEPARATORS, chunk_size, count_tokens)
     return _apply_overlap(chunks, overlap, count_tokens)
+
+
+def chunk_page(
+    page: dict,
+    chunk_size: int = 512,
+    overlap: int = 50,
+    count_tokens: Callable[[str], int] = _count_words,
+) -> list[dict]:
+    """Chunk a page dict into sections, falling back to recursive splitting for
+    sections that exceed chunk_size. Returns list of chunk dicts with metadata."""
+    chunks = []
+
+    for section, content in _parse_sections(page["text"]):
+        if not content:
+            continue
+
+        if count_tokens(content) <= chunk_size:
+            sub_chunks = [content]
+        else:
+            sub_chunks = _apply_overlap(
+                _recursive_split(content, SEPARATORS, chunk_size, count_tokens),
+                overlap,
+                count_tokens,
+            )
+
+        for i, text in enumerate(sub_chunks):
+            chunks.append({
+                "pageid": page["pageid"],
+                "title": page["title"],
+                "section": section,
+                "part": i,
+                "text": text,
+            })
+
+    return chunks
