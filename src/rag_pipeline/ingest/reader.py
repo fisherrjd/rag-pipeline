@@ -1,7 +1,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Iterator
+from collections.abc import Iterator
 
 from rag_pipeline.ingest.cleaner import clean
 
@@ -11,13 +11,13 @@ PAGES_DIR = Path.cwd() / "data" / "pages"
 MANIFEST_PATH = Path.cwd() / "data" / "manifest.json"
 
 
-def iter_pages(pages_dir: Path = PAGES_DIR) -> Iterator[dict]:
+def iter_pages(pages_dir: Path = PAGES_DIR, manifest_path: Path = MANIFEST_PATH) -> Iterator[dict]:
     """Yield cleaned page dicts with keys: pageid, title, text.
 
     For each page, uses a cached .md if present. Otherwise converts the .html
     via cleaner and saves the result as .md alongside the source file.
     """
-    manifest = _load_manifest()
+    manifest = _load_manifest(manifest_path)
     log.info(f"Reading pages from {pages_dir}")
 
     for html_path in sorted(pages_dir.glob("*.html")):
@@ -38,7 +38,7 @@ def iter_pages(pages_dir: Path = PAGES_DIR) -> Iterator[dict]:
         yield {"pageid": pageid, "title": title, "text": text}
 
 
-def _load_manifest() -> dict:
-    if MANIFEST_PATH.exists():
-        return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+def _load_manifest(manifest_path: Path = MANIFEST_PATH) -> dict:
+    if manifest_path.exists():
+        return json.loads(manifest_path.read_text(encoding="utf-8"))
     return {}

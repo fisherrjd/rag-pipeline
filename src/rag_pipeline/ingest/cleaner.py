@@ -46,9 +46,5 @@ def clean_html(html: str) -> str:
     return str(soup)
 
 
-def transform_md(html: str) -> str:
-    return md(html)
-
-
 def clean(html: str) -> str:
-    return transform_md(clean_html(html))
+    return md(clean_html(html), heading_style="ATX")

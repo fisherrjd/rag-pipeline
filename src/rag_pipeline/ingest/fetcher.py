@@ -114,5 +114,7 @@ if __name__ == "__main__":
 
     from rag_pipeline.ingest.reader import iter_pages
 
-    for page in iter_pages():
+    _pages_dir = project_root / "data" / "pages"
+    _manifest_path = project_root / "data" / "manifest.json"
+    for page in iter_pages(pages_dir=_pages_dir, manifest_path=_manifest_path):
         print(f"{page['pageid']}: {page['title']} ({len(page['text'])} chars)")
