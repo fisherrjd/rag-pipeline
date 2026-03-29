@@ -34,8 +34,10 @@ def iter_pages(pages_dir: Path = PAGES_DIR, manifest_path: Path = MANIFEST_PATH)
             md_path.write_text(text, encoding="utf-8")
             log.info(f"Wrote {md_path}")
 
-        title = manifest.get(pageid, {}).get("title", pageid)
-        yield {"pageid": pageid, "title": title, "text": text}
+        entry = manifest.get(pageid, {})
+        title = entry.get("title", pageid)
+        revid = entry.get("revid")
+        yield {"pageid": pageid, "title": title, "revid": revid, "text": text}
 
 
 def _load_manifest(manifest_path: Path = MANIFEST_PATH) -> dict:

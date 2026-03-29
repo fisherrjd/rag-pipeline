@@ -16,24 +16,24 @@
 - [ ] Write tests for chunking (verify chunk sizes, overlap, edge cases)
 
 ## Phase 3: Embedding
-- [ ] Learn what embeddings are (text -> dense vector, semantic similarity as distance)
-- [ ] Install `sentence-transformers`, load `all-MiniLM-L6-v2`
-- [ ] Implement `embedder.py` - take chunks in, get vectors out
-- [ ] Inspect the raw vectors - look at dimensions, compare similar vs dissimilar text
-- [ ] Write tests for embedding (verify output shape, deterministic results)
+- [x] Learn what embeddings are (text -> dense vector, semantic similarity as distance)
+- [x] Install `fastembed`, load `sentence-transformers/all-MiniLM-L6-v2`
+- [x] Implement `embedder.py` - take chunks in, get vectors out (384-dim vectors)
+- [x] Inspect the raw vectors - look at dimensions, compare similar vs dissimilar text
+- [x] Write tests for embedding (verify output shape, deterministic results)
 
 ## Phase 4: Vector Store
-- [ ] Learn how vector similarity search works (cosine similarity, approximate nearest neighbors)
-- [ ] Install ChromaDB
-- [ ] Implement `vector_store.py` - store embeddings with metadata, query by similarity
-- [ ] Experiment with persistence (save to disk, reload, verify data survives restart)
-- [ ] Write tests for store (insert, query, verify results match expectations)
+- [x] Learn how vector similarity search works (cosine similarity, approximate nearest neighbors)
+- [x] Install ChromaDB
+- [x] Implement `vector_store.py` - store embeddings with metadata, query by similarity
+- [x] Experiment with persistence (save to disk, reload, verify data survives restart)
+- [x] Write tests for store (insert, query, verify results match expectations)
 
 ## Phase 5: Retrieval
-- [ ] Learn about retrieval strategies (top-k, similarity thresholds, re-ranking)
-- [ ] Implement `retriever.py` - take a query string, return ranked document chunks
-- [ ] Experiment with top-k values and observe how result quality changes
-- [ ] Write tests for retrieval (known queries against known documents)
+- [x] Learn about retrieval strategies (top-k, similarity thresholds, re-ranking)
+- [x] Implement `retriever.py` - take a query string, return ranked document chunks
+- [x] Experiment with top-k values and observe how result quality changes
+- [x] Write tests for retrieval (known queries against known documents)
 
 ## Phase 6: Generation
 - [ ] Decide on LLM backend (Claude API, local model via MLX/Ollama, etc.)
